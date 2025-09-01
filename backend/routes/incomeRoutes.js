@@ -4,7 +4,7 @@ const {
   getAllIncome,
   deleteIncome,
   downloadIncomeExcel,
-} = require("../controllers/incomeControllers.js");
+} = require("../controllers/incomeController.js");
 const { protect } = require("../middleware/authMiddleware.js");
 
 const router = express.Router();
