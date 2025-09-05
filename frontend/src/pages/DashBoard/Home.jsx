@@ -1,8 +1,13 @@
+import DashBoardLayout from '@components/layouts/DashBoardLayout'
 import React from 'react'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <DashBoardLayout activeMenu="dashboard">
+      <div className="my-5 mx-auto">
+        
+      </div>
+    </DashBoardLayout>
   )
 }
 

@@ -8,7 +8,7 @@ import SignUp from "@pages/Auth/SignUp";
 import Home from "@pages/DashBoard/Home";
 import Income from "@pages/DashBoard/Income";
 import Expense from "@pages/DashBoard/Expense";
-
+import UserProvider from "@context/UserContext";
 // Định nghĩa Root trước
 // eslint-disable-next-line react-refresh/only-export-components
 const Root = () => {
@@ -49,6 +49,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
   </StrictMode>
 );
