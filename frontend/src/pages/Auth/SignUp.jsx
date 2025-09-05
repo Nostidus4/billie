@@ -1,11 +1,13 @@
 import FormField from "@components/FormField";
 import TextInput from "@components/FormInputs/TextInput";
 import { Alert, Button } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { API_PATHS } from "@/utils/apiPath";
+
+import { UserContext } from "@context/UserContext";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -14,6 +16,8 @@ const SignUp = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const {updateUser} = useContext(UserContext);
+  
   const onSubmit = async (values) => {
     try {
       setErrorMsg("");

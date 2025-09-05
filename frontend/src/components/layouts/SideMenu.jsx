@@ -33,12 +33,12 @@ const SideMenu = ({activeMenu}) => {
         ) : (
           <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4 border-2 border-green-200">
             <span className="text-green-600 font-semibold text-xl">
-              {user?.fullName?.charAt(0)?.toUpperCase() || "U"}
+              {user?.userName?.charAt(0)?.toUpperCase() || "U"}
             </span>
           </div>
         )}
         <h5 className="text-center text-gray-800 font-semibold text-lg">
-          {user?.fullName || "User"}
+          {user?.userName || "User"}
         </h5>
         <p className="text-center text-gray-500 text-sm mt-1">
           {user?.email || ""}
