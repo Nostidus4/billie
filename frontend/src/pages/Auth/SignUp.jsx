@@ -30,6 +30,8 @@ const SignUp = () => {
       };
       const { data } = await axiosInstance.post(API_PATHS.AUTH.REGISTER, payload);
       if (data) {
+        localStorage.setItem("token", data.token);
+        updateUser(data.user);
         setSuccessMsg("Đăng ký thành công. Vui lòng đăng nhập.");
         setTimeout(() => navigate("/login", { replace: true }), 800);
       }
