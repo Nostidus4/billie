@@ -1,12 +1,41 @@
 import FormField from "@components/FormField";
 import TextInput from "@components/FormInputs/TextInput";
 import { Alert, Button } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { API_PATHS } from "@/utils/apiPath";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const { control, handleSubmit } = useForm();
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const onSubmit = async (values) => {
+    try {
+      setErrorMsg("");
+      setSuccessMsg("");
+      setIsSubmitting(true);
+      const payload = {
+        userName: values.userName,
+        email: values.email,
+        password: values.password,
+      };
+      const { data } = await axiosInstance.post(API_PATHS.AUTH.REGISTER, payload);
+      if (data) {
+        setSuccessMsg("Đăng ký thành công. Vui lòng đăng nhập.");
+        setTimeout(() => navigate("/login", { replace: true }), 800);
+      }
+    } catch (error) {
+      const serverMessage = error?.response?.data?.message;
+      setErrorMsg(serverMessage || "Đăng ký thất bại. Vui lòng thử lại.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-200">
       <div className="flex flex-col md:flex-row items-center bg-white shadow-2xl rounded-3xl p-8 md:p-12 gap-8 max-w-3xl w-full">
@@ -18,7 +47,7 @@ const SignUp = () => {
             </p>
             <p className="font-light text-gray-500 text-base">Make your app management easy and fun!</p>
           </div>
-          <form className="flex flex-col gap-6" onSubmit={handleSubmit()}>
+          <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
             <FormField
               name={"userName"}
               label={"Username"}
@@ -59,9 +88,12 @@ const SignUp = () => {
               }}
               fullWidth
               type="submit"
+              disabled={isSubmitting}
             >
-              Sign Up
+              {isSubmitting ? "Signing up..." : "Sign Up"}
             </Button>
+            {errorMsg ? (<Alert severity="error">{errorMsg}</Alert>) : null}
+            {successMsg ? (<Alert severity="success">{successMsg}</Alert>) : null}
     
           </form>
           <p className="mt-6 text-center text-gray-600">

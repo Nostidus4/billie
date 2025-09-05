@@ -9,7 +9,8 @@
       "@context/*": ["src/context/*"],
       "@configs/*": ["src/configs/*"],
       "@redux/*": ["src/redux/*"],
-      "@services/*": ["src/services/*"]
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
     }
   }
 }
