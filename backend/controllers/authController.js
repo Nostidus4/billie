@@ -9,10 +9,10 @@ const generateToken = (id) => {
 
 // Đăng ký người dùng
 exports.registerUser = async (req, res) => {
-  const { userName, email, password } = req.body || {};
+  const { fullName, email, password } = req.body || {};
 
   // Kiểm tra các trường bắt buộc
-  if (!userName || !email || !password) {
+  if (!fullName || !email || !password) {
     return res.status(400).json({ message: "Vui lòng điền đầy đủ các trường" });
   }
 
@@ -25,7 +25,7 @@ exports.registerUser = async (req, res) => {
 
     // Tạo người dùng mới
     const user = await User.create({
-      userName,
+      fullName,
       email,
       password,
     });
@@ -50,11 +50,11 @@ exports.loginUser = async (req, res) => {
   }
 
   try {
-    // Tìm người dùng qua email hoặc userName
+    // Tìm người dùng qua email hoặc fullName
     const user = await User.findOne({
       $or: [
         { email: userNameOrEmail },
-        { userName: userNameOrEmail }
+        { fullName: userNameOrEmail }
       ]
     });
 
