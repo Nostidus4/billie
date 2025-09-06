@@ -1,37 +1,33 @@
 const { response } = require('express');
-const User = require('../models/User.js')
+const User = require('../models/User.js');
 const jwt = require("jsonwebtoken");
 
-//Generate JWT token
-const generateToken = (id)=>{
+// Tạo JWT token
+const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
 
-//  Register User
+// Đăng ký người dùng
 exports.registerUser = async (req, res) => {
-  // const { userName, email, password, profileImageUrl } = req.body 
-  const { userName, email, password } = req.body 
-  //need this to not get TypeError: Cannot destructure property 'userName' of 'req.body' as it is undefined.
-                                                        || {}; 
+  const { userName, email, password } = req.body || {};
 
-  // Validation: check for missing fields
-  if(!userName || !email || !password){
-    return res.status(400).json({ message: "All fields are required"});
-  };
+  // Kiểm tra các trường bắt buộc
+  if (!userName || !email || !password) {
+    return res.status(400).json({ message: "Vui lòng điền đầy đủ các trường" });
+  }
 
   try {
-    //Check if email already exists
-    const existingUser = await User.findOne({email});
-    if(existingUser)  {
-      return res.status(400).json({ message: "Email already in use"});
-    };
+    // Kiểm tra email đã tồn tại chưa
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email đã được sử dụng" });
+    }
 
-    //Create the user
+    // Tạo người dùng mới
     const user = await User.create({
       userName,
       email,
       password,
-      // profileImageUrl,
     });
 
     res.status(201).json({
@@ -39,32 +35,31 @@ exports.registerUser = async (req, res) => {
       user,
       token: generateToken(user._id),
     });
-  } catch (err){
-    res
-      .status(500)
-      .json({ message:"Error registering user", error: err.message });
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi khi đăng ký người dùng", error: err.message });
   }
 };
 
-//  Login User
+// Đăng nhập người dùng
 exports.loginUser = async (req, res) => {
   const { userNameOrEmail, password } = req.body || {};
 
-  // Validation: check for missing fields
+  // Kiểm tra các trường bắt buộc
   if (!userNameOrEmail || !password) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: "Vui lòng điền đầy đủ các trường" });
   }
 
   try {
-    // Find user by email or userName
+    // Tìm người dùng qua email hoặc userName
     const user = await User.findOne({
       $or: [
         { email: userNameOrEmail },
         { userName: userNameOrEmail }
       ]
     });
+
     if (!user || !(await user.comparePassword(password))) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Thông tin đăng nhập không hợp lệ" });
     }
 
     res.status(200).json({
@@ -73,25 +68,21 @@ exports.loginUser = async (req, res) => {
       token: generateToken(user._id),
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error logging in user", error: err.message });
+    res.status(500).json({ message: "Lỗi khi đăng nhập", error: err.message });
   }
 };
 
-//  Get User Info 
+// Lấy thông tin người dùng
 exports.getUserInfo = async (req, res) => {
-  try{
+  try {
     const user = await User.findById(req.user.id).select("-password");
 
-    if (!user){
-      return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      return res.status(404).json({ message: "Không tìm thấy người dùng" });
     }
-    
+
     res.status(200).json(user);
-  } catch (err){
-    res
-      .status(500)
-      .json({ message:"Error registering user", error: err.message }); //change Message ?
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi khi lấy thông tin người dùng", error: err.message });
   }
 };
