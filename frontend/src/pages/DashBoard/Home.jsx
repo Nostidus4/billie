@@ -79,9 +79,9 @@ const Home = () => {
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 items-stretch auto-rows-fr [&>div]:h-full [&_.card]:h-full [&_.card]:min-h-[420px]'>
           <div className='w-full'>
             <FinanceOverview 
-              totalBalance = {dashboardData?.totalBalance || 0}
-              totalIncome = {dashboardData?.totalIncome || 0}
-              totalExpenses = {dashboardData?.totalExpenses || 0}
+              totalBalance = {(dashboardData?.totalBalance || 0).toFixed(2)}
+              totalIncome = {(dashboardData?.totalIncome || 0).toFixed(2)}
+              totalExpenses = {(dashboardData?.totalExpenses || 0).toFixed(2)}
             />
           </div>
 

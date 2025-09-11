@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi'
-import { LuBell, LuSettings, LuUser } from 'react-icons/lu'
+import { LuBell, LuSettings, LuUser, LuMessageSquare } from 'react-icons/lu'
 import SideMenu from '@components/layouts/SideMenu'
+import ChatbotWidget from '@components/chatbot/ChatbotWidget'
 
 const Navbar = ({ activeMenu }) => {
   const [openSideMenu, setOpenSideMenu] = useState(false)
+  const [openChat, setOpenChat] = useState(false)
 
   return (
     <>
@@ -49,6 +51,13 @@ const Navbar = ({ activeMenu }) => {
 
             {/* Action Buttons */}
             <div className='flex items-center gap-3'>
+              <button
+                onClick={() => setOpenChat(true)}
+                className='p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-200 backdrop-blur-sm group'
+                aria-label='Open chatbot'
+              >
+                <LuMessageSquare className='text-white text-xl group-hover:scale-110 transition-transform duration-200' />
+              </button>
               <button className='p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-200 backdrop-blur-sm group'>
                 <LuBell className='text-white text-xl group-hover:scale-110 transition-transform duration-200' />
               </button>
@@ -78,6 +87,7 @@ const Navbar = ({ activeMenu }) => {
           </div>
         )
       }
+      <ChatbotWidget isOpen={openChat} onClose={() => setOpenChat(false)} />
     </>
   )
 }
