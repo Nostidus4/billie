@@ -4,7 +4,7 @@ const {
   getAllGoal,
   deleteGoal,
   downloadGoalExcel,
-  updateGoalAmount,
+  updateGoalCurAmount,
 } = require("../controllers/goalController.js");
 const { protect } = require("../middleware/authMiddleware.js");
 

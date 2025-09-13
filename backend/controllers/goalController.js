@@ -44,7 +44,7 @@ exports.deleteGoal = async (req, res) => {
   }
 };
 
-// Update currentAmount by increment
+// Update currentAmount by increment and set status if completed
 exports.updateGoalCurAmount = async (req, res) => {
   const { id } = req.params;
   const { increment } = req.body;
@@ -52,15 +52,26 @@ exports.updateGoalCurAmount = async (req, res) => {
     return res.status(400).json({ message: 'Increment value must be a number' });
   }
   try {
-    const updatedGoal = await Goal.findByIdAndUpdate(
-      id,
-      { $inc: { currentAmount: increment } },
-      { new: true }
-    );
-    if (!updatedGoal) {
+    const goal = await Goal.findById(id);
+
+    if (!goal) {
       return res.status(404).json({ message: 'Goal not found' });
     }
-    res.status(200).json(updatedGoal);
+
+    let newAmount = goal.currentAmount + increment;
+    if (newAmount < 0) newAmount = 0;
+    let newStatus = goal.status;
+
+    if (newAmount >= goal.amount) {
+      newStatus = 'completed';
+    } else {
+      newStatus = 'in-progress';
+    }
+    
+    goal.currentAmount = newAmount;
+    goal.status = newStatus;
+    await goal.save();
+    res.status(200).json(goal);
   } catch (error) {
     res.status(500).json({ message: 'Server Error' });
   }
