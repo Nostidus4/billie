@@ -4,6 +4,7 @@ const {
   getAllExpense,
   deleteExpense,
   downloadExpenseExcel,
+  predictExpense,
 } = require("../controllers/expenseController.js");
 const { protect } = require("../middleware/authMiddleware.js");
 
@@ -13,5 +14,5 @@ router.post("/add", protect, addExpense);
 router.get("/get", protect, getAllExpense);
 router.delete("/:id", protect, deleteExpense);
 router.get("/downloadexcel", protect, downloadExpenseExcel);
-
+router.get("/predict", protect, predictExpense);
 module.exports = router;
