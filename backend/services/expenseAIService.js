@@ -1,3 +1,4 @@
+const { isValidObjectId, Types } = require("mongoose");
 const { Document, Settings, VectorStoreIndex } = require("llamaindex");
 const { MistralAI, MistralAIEmbedding } = require("@llamaindex/mistral");
 const Expense = require("../models/Expense");
@@ -8,6 +9,26 @@ Settings.llm = new MistralAI({
     model: "mistral-tiny",
 });
 Settings.embedModel = new MistralAIEmbedding();
+
+const getAggregatedTotal = async (userId) => {
+    const userObjectId = new Types.ObjectId(String(userId));
+    const totalIncome = await Income.aggregate([
+        { $match: { userId: userObjectId } },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+    const totalExpense = await Expense.aggregate([
+        { $match: { userId: userObjectId } },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
+    return {
+        totalIncome: totalIncome[0] ? totalIncome[0].total : 0,
+        totalExpense: totalExpense[0] ? totalExpense[0].total : 0,
+        netBalance:
+            (totalIncome[0] ? totalIncome[0].total : 0) -
+            (totalExpense[0] ? totalExpense[0].total : 0),
+    };
+};
 
 async function loadUserIncomes(userId) {
     const incomes = await Income.find({ userId }).sort({ date: -1 });
@@ -51,9 +72,22 @@ async function loadUserExpenses(userId) {
 }
 
 async function loadUserFinancialData(userId) {
-    const expenses = await loadUserExpenses(userId);
-    const incomes = await loadUserIncomes(userId);
-    return [...expenses, ...incomes];
+    const [expenses, incomes, aggregatedTotals] = await Promise.all([
+        loadUserExpenses(userId),
+        loadUserIncomes(userId),
+        getAggregatedTotal(userId),
+    ]);
+
+    console.log("Aggregated Totals:", aggregatedTotals);
+
+    const summaryDocs = [
+        new Document({
+            text: `Financial Summary: Total Income - $${aggregatedTotals.totalIncome}, Total Expenses - $${aggregatedTotals.totalExpense}, Net Balance - $${aggregatedTotals.netBalance}.`,
+            metadata: { type: "aggregate", userId, period: "all-time" },
+        }),
+    ];
+
+    return [...expenses, ...incomes, ...summaryDocs];
 }
 
 async function createIndex(documents) {
