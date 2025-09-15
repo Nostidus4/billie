@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, Navigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import SignUp from "@pages/Auth/SignUp";
 import Home from "@pages/DashBoard/Home";
 import Income from "@pages/DashBoard/Income";
 import Expense from "@pages/DashBoard/Expense";
+import ScanBill from "@pages/DashBoard/ScanBill";
 import UserProvider from "@context/UserContext";
 // Định nghĩa Root trước
 // eslint-disable-next-line react-refresh/only-export-components
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: "/expense",
     element: <Expense />,
+  },
+  {
+    path: "/scan-bill",
+    element: <ScanBill />,
   },
 ]);
 
