@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { LuX, LuSend } from 'react-icons/lu'
+import { axiosInstance } from '@utils/axiosInstance'
+import { API_PATHS } from '@utils/apiPath'
 
 const INITIAL_MESSAGES = [
   { id: 'w1', role: 'assistant', text: 'Xin chào! Mình là Billie Bot. Mình có thể giúp gì cho bạn?' }
@@ -8,6 +10,7 @@ const INITIAL_MESSAGES = [
 const ChatbotWidget = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState(INITIAL_MESSAGES)
   const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const containerRef = useRef(null)
 
   useEffect(() => {
@@ -17,20 +20,38 @@ const ChatbotWidget = ({ isOpen, onClose }) => {
     }
   }, [isOpen])
 
-  const handleSend = () => {
+  useEffect(() => {
+    // Scroll to bottom when new messages are added
+    setTimeout(() => containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: 'smooth' }), 100)
+  }, [messages])
+
+  const handleSend = async () => {
     const trimmed = input.trim()
-    if (!trimmed) return
+    if (!trimmed || isLoading) return
 
     const userMsg = { id: `u-${Date.now()}`, role: 'user', text: trimmed }
     setMessages(prev => [...prev, userMsg])
     setInput('')
+    setIsLoading(true)
 
-    // Simple mock reply after a short delay
-    setTimeout(() => {
-      const replyText = getMockReply(trimmed)
-      setMessages(prev => [...prev, { id: `a-${Date.now()}`, role: 'assistant', text: replyText }])
-      setTimeout(() => containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: 'smooth' }), 50)
-    }, 500)
+    // Optimistically add a thinking message
+    const thinkingId = `a-${Date.now()}`
+    setMessages(prev => [...prev, { id: thinkingId, role: 'assistant', text: '...' }])
+
+    try {
+      const response = await axiosInstance.post(API_PATHS.AI.QUERY, {
+        question: trimmed
+      })
+
+      const replyText = response.data.answer;
+      setMessages(prev => prev.map(m => m.id === thinkingId ? { ...m, text: replyText } : m))
+    } catch (error) {
+      console.error('Chatbot API error:', error)
+      const errorText = 'Rất tiếc, mình đang gặp sự cố. Vui lòng thử lại sau.'
+      setMessages(prev => prev.map(m => m.id === thinkingId ? { ...m, text: errorText } : m))
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const onKeyDown = (e) => {
@@ -84,11 +105,13 @@ const ChatbotWidget = ({ isOpen, onClose }) => {
               rows={1}
               placeholder='Nhập tin nhắn…'
               className='flex-1 resize-none rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500'
+              disabled={isLoading}
             />
             <button
               onClick={handleSend}
-              className='h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95 transition'
+              className='h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95 transition disabled:bg-emerald-400'
               aria-label='Gửi'
+              disabled={isLoading}
             >
               <LuSend className='text-lg' />
             </button>
@@ -97,14 +120,6 @@ const ChatbotWidget = ({ isOpen, onClose }) => {
       </div>
     </div>
   )
-}
-
-function getMockReply(question) {
-  const q = question.toLowerCase()
-  if (q.includes('tổng thu') || q.includes('income')) return 'Tổng thu nhập của bạn hiện là 2,100.'
-  if (q.includes('tổng chi') || q.includes('expense')) return 'Tổng chi tiêu của bạn hiện là 210.'
-  if (q.includes('số dư') || q.includes('balance') || q.includes('tài khoản')) return 'Số dư ước tính là 1,890.'
-  return 'Mình đã nhận được tin nhắn. Bản demo này đang dùng trả lời mẫu.'
 }
 
 export default ChatbotWidget
