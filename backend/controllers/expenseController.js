@@ -146,3 +146,118 @@ exports.predictExpense = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+experts.getMonthlyComparison = async (req, res) => {
+  try {
+    const now = new Date();
+    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    const thisMonthTotal = await Expense.aggregate([
+      {
+        $match: {
+          userId: req.user.id,
+          date: { $gte: thisMonthStart, $lte: now },
+        },
+      },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+    const lastMonthTotal = await Expense.aggregate([
+      {
+        $match: {
+          userId: req.user.id,
+          date: { $gte: lastMonthStart, $lte: lastMonthEnd },
+        },
+      },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+    const current = thisMonthTotal[0]?.total || 0;
+    const previous = lastMonthTotal[0]?.total || 0;
+    const difference = current - previous;
+    const percent = previous === 0 ? 0 : (difference / previous) * 100;
+
+    res.json({ current, previous, difference, percent });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getMonthlyCategoryTotal = async (req, res) => {
+  try {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const totals = await Expense.aggregate([
+      {
+        $match: {
+          userId: req.user.id,
+          date: { $gte: monthStart, $lte: now },
+        },
+      },
+      {
+        $group: {
+          _id: "$category",
+          total: { $sum: "$amount" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: "$_id",
+          total: 1,
+        },
+      },
+      { $sort: { total: -1 } },
+    ]);
+
+    res.json(totals);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getCategoryPercentThisMonth = async (req, res) => {
+  try {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const stats = await Expense.aggregate([
+      {
+        $match: {
+          userId: req.user.id,
+          date: { $gte: monthStart, $lte: now },
+        },
+      },
+      {
+        $group: {
+          _id: "$category",
+          total: { $sum: "$amount" },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          categories: { $push: { category: "$_id", total: "$total" } },
+          grandTotal: { $sum: "$total" },
+        },
+      },
+      { $unwind: "$categories" },
+      {
+        $project: {
+          _id: 0,
+          category: "$categories.category",
+          total: "$categories.total",
+          percent: {
+            $multiply: [{ $divide: ["$categories.total", "$grandTotal"] }, 100],
+          },
+        },
+      },
+      { $sort: { total: -1 } },
+    ]);
+
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
