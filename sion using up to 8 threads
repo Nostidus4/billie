@@ -1,0 +1,27 @@
+[33m3fe10e4[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Add some stats feature
+[33md0261bc[m Add predict session
+[33maf0ebd2[m add Goal api: add,getAll,delete,download,updateGoalCurAmount
+[33ma49f755[m Merge pull request #5 from Nostidus4/voicenscan
+[33mf2e6578[m[33m ([m[1;31morigin/voicenscan[m[33m)[m Đã thêm scan bill, voice
+[33mfc70de9[m chatbot template
+[33mb5e2901[m toàn bộ source code frontend
+[33mec4a7a2[m Cập nhật authController và User model để dùng fullName khớp với main
+[33m7edff6a[m Cập nhật authController và User model để dùng fullName khớp với main
+[33m4dd1fed[m Cập nhật authController và User model để dùng fullName khớp với main
+[33m34d4e90[m Cập nhật authController với userName thống nhất và sửa lỗi
+[33m83d57ac[m Merge pull request #3 from Nostidus4/backend
+[33m74e69c9[m add useContext for signup
+[33maae28d0[m sync the property of model User to userName, and userNameOrEmail
+[33m5e7f23b[m add useContext and cmt
+[33mcb1aed3[m[33m ([m[1;31morigin/backend[m[33m)[m change login function var name and change User model: not use profileImage, thus do not need upload image too, just now
+[33m9fdaaa8[m Merge pull request #2 from Nostidus4/frontend
+[33m6d6729e[m login signup frontend
+[33m8ab75c8[m Merge pull request #1 from Nostidus4/backend
+[33m000f7b5[m Creating Dashboard APIs and fix some folders,files names
+[33m673e7bf[m Creating Expense APIs (Add Expense, Get All Expenses, Delete Expense, Download Excel Data)
+[33mc88cf30[m Creating Income APIs (Add Income, Get All Incomes, Delete Income, Download Excel Data)
+[33m804e0bc[m Creating Authentication APIs (Login, Sign-Up, Get User Info, Profile Image Upload), and test upload image
+[33m53c6462[m add devDependencies nodemon, construct folder and file,code on server.js,  setting MongoDB- JWT-PORT in .env, check MongoDB on db.js and use it on server.js
+[33m3a8d15a[m setting backend: package
+[33mfc61644[m thêm pretrierrc
+[33mede42b7[m First commit
