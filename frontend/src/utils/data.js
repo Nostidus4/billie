@@ -5,6 +5,8 @@ import {
     LuLogOut,
 } from "react-icons/lu";
 
+import { SiFuturelearn } from "react-icons/si";
+
 export const SIDE_MENU_DATA = [
     {
         id: "01",
@@ -26,6 +28,12 @@ export const SIDE_MENU_DATA = [
     },
     {
         id: "04",
+        icon: SiFuturelearn ,
+        label: "Prediction",
+        path: "/prediction",
+    },
+    {
+        id: "05",
         icon: LuLogOut ,
         label: "Logout",
         path: "/logout",

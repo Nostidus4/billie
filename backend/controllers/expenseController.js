@@ -147,7 +147,7 @@ exports.predictExpense = async (req, res) => {
   }
 };
 
-experts.getMonthlyComparison = async (req, res) => {
+exports.getMonthlyComparison = async (req, res) => {
   try {
     const now = new Date();
     const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);

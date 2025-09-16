@@ -31,6 +31,14 @@
   @apply flex items-center gap-2 text-sm font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 px-4 py-2 rounded-lg border border-transparent cursor-pointer;
 }
 
+.filter-btn {
+  @apply flex items-center gap-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 px-4 py-2 rounded-lg border border-gray-300 cursor-pointer transition-colors;
+}
+
+.download-btn {
+  @apply flex items-center gap-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 px-4 py-2 rounded-lg border border-gray-300 cursor-pointer transition-colors;
+}
+
 /* Custom animations and effects */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
