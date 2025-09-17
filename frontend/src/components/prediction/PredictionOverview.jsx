@@ -152,9 +152,9 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
                   </div>
                   <div className='text-right'>
                     <p className='text-3xl font-bold text-blue-600'>
-                      {new Intl.NumberFormat('vi-VN', {
+                      {new Intl.NumberFormat('en-US', {
                         style: 'currency',
-                        currency: 'VND'
+                        currency: 'USD'
                       }).format(predictionData.prediction)}
                     </p>
                     <p className='text-sm text-blue-500 mt-1'>Dự đoán</p>
@@ -196,3 +196,4 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
 }
 
 export default PredictionOverview
+
