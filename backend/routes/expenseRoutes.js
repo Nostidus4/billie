@@ -1,14 +1,18 @@
 const express = require("express");
 const {
-  addExpense,
-  getAllExpense,
-  deleteExpense,
-  downloadExpenseExcel,
-  predictExpense,
-  getMonthlyComparison,
-  getMonthlyCategoryTotal,
-  getCategoryPercentThisMonth,
+    addExpense,
+    getAllExpense,
+    deleteExpense,
+    downloadExpenseExcel,
+    predictExpense,
+    getMonthlyComparison,
+    getMonthlyCategoryTotal,
+    getCategoryPercentThisMonth,
 } = require("../controllers/expenseController.js");
+const {
+    queryAIExpenses,
+    aiHealthCheck,
+} = require("../controllers/aiExpenseController.js");
 const { protect } = require("../middleware/authMiddleware.js");
 
 const router = express.Router();
@@ -17,6 +21,9 @@ router.post("/add", protect, addExpense);
 router.get("/get", protect, getAllExpense);
 router.delete("/:id", protect, deleteExpense);
 router.get("/downloadexcel", protect, downloadExpenseExcel);
+
+router.post("/ai/query", protect, queryAIExpenses);
+router.get("/ai/health", protect, aiHealthCheck); // For testing AI service health
 router.get("/predict", protect, predictExpense);
 router.get("/monthly-comparison", protect, getMonthlyComparison);
 router.get("/monthly-category-total", protect, getMonthlyCategoryTotal);
