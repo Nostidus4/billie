@@ -5,7 +5,7 @@ const instance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
   headers: {
-    "Content-Type": "application/json",
+    // Không set Content-Type mặc định để axios tự xác định (đặc biệt với FormData)
     Accept: "application/json",
   },
 });
@@ -16,6 +16,12 @@ instance.interceptors.request.use(
     const accessToken = localStorage.getItem("token");
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    // Nếu gửi FormData, loại bỏ Content-Type để axios tự thêm boundary
+    if (config.data instanceof FormData) {
+      if (config.headers && config.headers["Content-Type"]) {
+        delete config.headers["Content-Type"]; 
+      }
     }
     return config;
   },

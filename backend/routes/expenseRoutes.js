@@ -4,6 +4,10 @@ const {
     getAllExpense,
     deleteExpense,
     downloadExpenseExcel,
+    predictExpense,
+    getMonthlyComparison,
+    getMonthlyCategoryTotal,
+    getCategoryPercentThisMonth,
 } = require("../controllers/expenseController.js");
 const {
     queryAIExpenses,
@@ -20,6 +24,8 @@ router.get("/downloadexcel", protect, downloadExpenseExcel);
 
 router.post("/ai/query", protect, queryAIExpenses);
 router.get("/ai/health", protect, aiHealthCheck); // For testing AI service health
-
+router.get("/predict", protect, predictExpense);
+router.get("/monthly-comparison", protect, getMonthlyComparison);
+router.get("/monthly-category-total", protect, getMonthlyCategoryTotal);
+router.get("/category-percent", protect, getCategoryPercentThisMonth);
 module.exports = router;
-
