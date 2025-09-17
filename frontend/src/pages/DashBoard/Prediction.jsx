@@ -162,17 +162,17 @@ const Prediction = () => {
           />
         </div>
 
-        <Modal isOpen={openAddGoalModal} onClose={() => setOpenAddGoalModal(false)} title="Thêm Mục tiêu Mới">
+        <Modal isOpen={openAddGoalModal} onClose={() => setOpenAddGoalModal(false)} title="Add New Goal">
           <AddGoalForm onAddGoal={handleAddGoal} loading={loading} />
         </Modal>
 
         <Modal
           isOpen={openDeleteAlert.show}
           onClose={() => setOpenDeleteAlert({ show: false, data: null })}
-          title="Xóa Mục tiêu"
+          title="Delete Goal"
         >
           <DeleteAlert
-            content="Bạn có chắc chắn muốn xóa mục tiêu này?"
+            content="Are you sure you want to delete this goal?"
             onDelete={() => handleDeleteGoal(openDeleteAlert.data)}
           />
         </Modal>

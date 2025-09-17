@@ -1,4 +1,4 @@
-import { StrictMode, Suspense, lazy } from "react";
+import { StrictMode} from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, Navigate } from "react-router-dom";

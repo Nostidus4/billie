@@ -17,13 +17,13 @@ const GoalList = ({ goals, onDelete, onDownload }) => {
   }
 
   const getStatusText = (status) => {
-    return status === 'completed' ? 'Hoàn thành' : 'Đang thực hiện'
+    return status === 'completed' ? 'Completed' : 'In progress'
   }
 
   return (
     <div className="card">
       <div className='flex justify-between items-center mb-6'>
-        <h5 className='text-xl font-bold text-gray-800'>Mục tiêu Tài chính</h5>
+        <h5 className='text-xl font-bold text-gray-800'>Financial Goals</h5>
         <button className='download-btn' onClick={onDownload}>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -51,7 +51,7 @@ const GoalList = ({ goals, onDelete, onDownload }) => {
                     </h6>
                     <div className='flex items-center gap-6 text-sm'>
                       <div className='flex items-center gap-2'>
-                        <span className='text-gray-500'>Tiến độ:</span>
+                        <span className='text-gray-500'>Progress:</span>
                         <span className='font-semibold text-gray-700'>
                           {formatCurrency(goal.currentAmount)} / {formatCurrency(goal.amount)}
                         </span>
@@ -108,7 +108,7 @@ const GoalList = ({ goals, onDelete, onDownload }) => {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <span>Hạn: {new Date(goal.deadline).toLocaleDateString('vi-VN')}</span>
+                    <span>Due: {new Date(goal.deadline).toLocaleDateString('vi-VN')}</span>
                   </div>
                 )}
               </div>
@@ -118,10 +118,10 @@ const GoalList = ({ goals, onDelete, onDownload }) => {
       ) : (
         <div className='text-center py-12'>
           <div className='text-gray-400 text-6xl mb-4'>🎯</div>
-          <h6 className='text-lg font-medium text-gray-600 mb-2'>Chưa có mục tiêu nào</h6>
-          <p className='text-sm text-gray-400 mb-4'>Hãy tạo mục tiêu tài chính đầu tiên của bạn</p>
+          <h6 className='text-lg font-medium text-gray-600 mb-2'>No goals yet</h6>
+          <p className='text-sm text-gray-400 mb-4'>Create your first financial goal</p>
           <button className='add-btn' onClick={() => {}}>
-            Tạo mục tiêu
+            Create goal
           </button>
         </div>
       )}

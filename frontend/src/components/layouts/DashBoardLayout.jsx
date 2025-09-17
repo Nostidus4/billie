@@ -3,6 +3,7 @@ import { UserContext } from '@context/UserContext'
 import { useUserAuth } from '@hooks/useUserAuth'
 import Navbar from '@components/layouts/Navbar'
 import SideMenu from '@components/layouts/SideMenu'
+import ChatbotWidget from '@components/chatbot/ChatbotWidget'
 
 const DashBoardLayout = ({activeMenu, children}) => {
    const { user } = useContext(UserContext);
@@ -19,6 +20,8 @@ const DashBoardLayout = ({activeMenu, children}) => {
         </div>
         <div className='grow mx-5'>{children}</div>
       </div>
+      {/* Global floating chat bubble */}
+      <ChatbotWidget />
     </div>
   )
 }

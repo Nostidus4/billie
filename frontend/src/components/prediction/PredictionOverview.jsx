@@ -10,13 +10,13 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
 
   const getDateRangeText = () => {
     if (dateRange.type === 'day') {
-      return `Ngày: ${dateRange.value}`
+      return `Day: ${dateRange.value}`
     } else if (dateRange.type === 'month') {
-      return `Tháng: ${dateRange.value}`
+      return `Month: ${dateRange.value}`
     } else if (dateRange.type === 'year') {
-      return `Năm: ${dateRange.value}`
+      return `Year: ${dateRange.value}`
     }
-    return 'Tất cả thời gian'
+    return 'All time'
   }
 
   return (
@@ -25,7 +25,7 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
         <div>
           <h5 className='text-xl font-bold text-gray-800'>Prediction Overview</h5>
           <p className='text-xs text-gray-400 mt-0.5'>
-            Dự đoán xu hướng chi tiêu và theo dõi mục tiêu tài chính của bạn.
+            Predict spending trends and track your financial goals.
           </p>
         </div>
 
@@ -37,7 +37,7 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" />
             </svg>
-            Bộ lọc
+            Filters
           </button>
           <button className='add-btn' onClick={onAddGoal}>
             Add Goal
@@ -49,7 +49,7 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
       {showFilters && (
         <div className='mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200'>
           <div className='flex items-center gap-4 mb-3'>
-            <span className='text-sm font-medium text-gray-700'>Lọc theo:</span>
+            <span className='text-sm font-medium text-gray-700'>Filter by:</span>
             <div className='flex gap-2'>
               <button
                 onClick={() => handleDateRangeChange('type', 'day')}
@@ -59,7 +59,7 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                Ngày
+                Day
               </button>
               <button
                 onClick={() => handleDateRangeChange('type', 'month')}
@@ -69,7 +69,7 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                Tháng
+                Month
               </button>
               <button
                 onClick={() => handleDateRangeChange('type', 'year')}
@@ -79,14 +79,14 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                Năm
+                Year
               </button>
             </div>
           </div>
           
           {dateRange.type === 'day' && (
             <div className='flex items-center gap-2'>
-              <label className='text-sm text-gray-600'>Chọn ngày:</label>
+              <label className='text-sm text-gray-600'>Pick a day:</label>
               <input
                 type="date"
                 value={dateRange.value}
@@ -98,7 +98,7 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
           
           {dateRange.type === 'month' && (
             <div className='flex items-center gap-2'>
-              <label className='text-sm text-gray-600'>Chọn tháng:</label>
+              <label className='text-sm text-gray-600'>Pick a month:</label>
               <input
                 type="month"
                 value={dateRange.value}
@@ -110,7 +110,7 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
           
           {dateRange.type === 'year' && (
             <div className='flex items-center gap-2'>
-              <label className='text-sm text-gray-600'>Chọn năm:</label>
+              <label className='text-sm text-gray-600'>Pick a year:</label>
               <select
                 value={dateRange.value}
                 onChange={(e) => handleDateRangeChange('value', e.target.value)}
@@ -124,7 +124,7 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
           )}
           
           <div className='mt-3 text-sm text-gray-600'>
-            Hiển thị: <span className='font-medium'>{getDateRangeText()}</span>
+            Showing: <span className='font-medium'>{getDateRangeText()}</span>
           </div>
         </div>
       )}
@@ -146,8 +146,8 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
                       </svg>
                     </div>
                     <div>
-                      <h6 className='text-lg font-semibold text-blue-800'>Dự đoán tháng tới</h6>
-                      <p className='text-sm text-blue-600'>Dựa trên dữ liệu lịch sử và xu hướng</p>
+                      <h6 className='text-lg font-semibold text-blue-800'>Next month prediction</h6>
+                      <p className='text-sm text-blue-600'>Based on historical data and trends</p>
                     </div>
                   </div>
                   <div className='text-right'>
@@ -157,7 +157,7 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
                         currency: 'VND'
                       }).format(predictionData.prediction)}
                     </p>
-                    <p className='text-sm text-blue-500 mt-1'>Dự đoán</p>
+                    <p className='text-sm text-blue-500 mt-1'>Prediction</p>
                   </div>
                 </div>
               </div>
@@ -171,8 +171,8 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
                     </svg>
                   </div>
                   <div>
-                    <h6 className='text-lg font-semibold text-orange-800'>Cần thêm dữ liệu</h6>
-                    <p className='text-sm text-orange-600'>Cần ít nhất 2 tháng dữ liệu chi tiêu để tạo dự đoán chính xác</p>
+                    <h6 className='text-lg font-semibold text-orange-800'>More data needed</h6>
+                    <p className='text-sm text-orange-600'>At least 2 months of expense data are required for accurate predictions</p>
                   </div>
                 </div>
               </div>
@@ -185,8 +185,8 @@ const PredictionOverview = ({ predictionData, onAddGoal, onDateRangeChange, date
           <div className='h-64 flex items-center justify-center text-gray-500 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300'>
             <div className='text-center'>
               <div className='text-6xl mb-4'>📊</div>
-              <h6 className='text-lg font-medium text-gray-600 mb-2'>Không có dữ liệu</h6>
-              <p className='text-sm text-gray-400'>Hãy thêm một số chi tiêu để xem dự đoán</p>
+              <h6 className='text-lg font-medium text-gray-600 mb-2'>No data</h6>
+              <p className='text-sm text-gray-400'>Add some expenses to see predictions</p>
             </div>
           </div>
         )}

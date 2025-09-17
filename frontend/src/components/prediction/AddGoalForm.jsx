@@ -53,13 +53,13 @@ const AddGoalForm = ({ onAddGoal, loading = false }) => {
 
       {/* Title */}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">Mục tiêu</label>
+        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">Goal</label>
         <input
           id="title"
           type="text"
           value={goal.title}
           onChange={({ target }) => handleChange('title', target.value)}
-          placeholder="Mua xe máy, Du lịch, Mua nhà..."
+          placeholder="New motorbike, Travel, House..."
           required
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
         />
@@ -67,7 +67,7 @@ const AddGoalForm = ({ onAddGoal, loading = false }) => {
 
       {/* Amount */}
       <div>
-        <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">Số tiền mục tiêu (VND)</label>
+        <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">Target amount (VND)</label>
         <input
           id="amount"
           type="number"
@@ -83,7 +83,7 @@ const AddGoalForm = ({ onAddGoal, loading = false }) => {
 
       {/* Deadline */}
       <div>
-        <label htmlFor="deadline" className="block text-sm font-medium text-gray-700 mb-2">Hạn chót (Tùy chọn)</label>
+        <label htmlFor="deadline" className="block text-sm font-medium text-gray-700 mb-2">Deadline (Optional)</label>
         <input
           id="deadline"
           type="date"
@@ -100,7 +100,7 @@ const AddGoalForm = ({ onAddGoal, loading = false }) => {
           disabled={loading}
           className="px-6 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 rounded-lg transition-colors"
         >
-          {loading ? 'Đang thêm...' : 'Thêm mục tiêu'}
+          {loading ? 'Adding...' : 'Add goal'}
         </button>
       </div>
     </form>

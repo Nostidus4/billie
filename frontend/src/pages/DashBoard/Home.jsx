@@ -50,21 +50,21 @@ const Home = () => {
           <InfoCard 
             icon={<IoMdCard />}
             label="Total Balance"
-            value={addThousandSeparator(dashboardData?.totalBalance || 0)}
+            value={addThousandSeparator(Math.round(dashboardData?.totalBalance || 0))}
             color="bg-green-600"
           />
 
           <InfoCard 
             icon={< LuWalletMinimal />}
             label="Total Income"
-            value={addThousandSeparator(dashboardData?.totalIncome || 0)}
+            value={addThousandSeparator(Math.round(dashboardData?.totalIncome || 0))}
             color="bg-orange-500"
           />
 
           <InfoCard 
             icon={<LuHandCoins />}
             label="Total Expense"
-            value={addThousandSeparator(dashboardData?.totalExpenses || 0)}
+            value={addThousandSeparator(Math.round(dashboardData?.totalExpenses || 0))}
             color="bg-red-500"
           />
         </div>
@@ -79,9 +79,9 @@ const Home = () => {
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 items-stretch auto-rows-fr [&>div]:h-full [&_.card]:h-full [&_.card]:min-h-[420px]'>
           <div className='w-full'>
             <FinanceOverview 
-              totalBalance = {(dashboardData?.totalBalance || 0).toFixed(2)}
-              totalIncome = {(dashboardData?.totalIncome || 0).toFixed(2)}
-              totalExpenses = {(dashboardData?.totalExpenses || 0).toFixed(2)}
+              totalBalance = {Number((dashboardData?.totalBalance || 0).toFixed(2))}
+              totalIncome = {Number((dashboardData?.totalIncome || 0).toFixed(2))}
+              totalExpenses = {Number((dashboardData?.totalExpenses || 0).toFixed(2))}
             />
           </div>
 
