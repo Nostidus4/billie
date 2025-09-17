@@ -1,14 +1,13 @@
-const { isValidObjectId, Types } = require("mongoose");
 const { Document, Settings, VectorStoreIndex } = require("llamaindex");
-const { MistralAI, MistralAIEmbedding } = require("@llamaindex/mistral");
+const { gemini, GeminiEmbedding, GEMINI_MODEL } = require("@llamaindex/google");
 const Expense = require("../models/Expense");
 const Income = require("../models/Income");
 
-Settings.llm = new MistralAI({
-    apiKey: process.env.MISTRAL_API_KEY,
-    model: "mistral-tiny",
+Settings.llm = gemini({
+    apiKey: process.env.GOOGLE_API_KEY,
+    model: GEMINI_MODEL.GEMINI_2_5_FLASH_LATEST,
 });
-Settings.embedModel = new MistralAIEmbedding();
+Settings.embedModel = new GeminiEmbedding();
 
 const getAggregatedTotal = async (userId) => {
     const userObjectId = new Types.ObjectId(String(userId));
@@ -72,22 +71,22 @@ async function loadUserExpenses(userId) {
 }
 
 async function loadUserFinancialData(userId) {
-    const [expenses, incomes, aggregatedTotals] = await Promise.all([
+    const [expenses, incomes] = await Promise.all([
         loadUserExpenses(userId),
         loadUserIncomes(userId),
-        getAggregatedTotal(userId),
+        // getAggregatedTotal(userId),
     ]);
 
-    console.log("Aggregated Totals:", aggregatedTotals);
+    // console.log("Aggregated Totals:", aggregatedTotals);
 
-    const summaryDocs = [
-        new Document({
-            text: `Financial Summary: Total Income - $${aggregatedTotals.totalIncome}, Total Expenses - $${aggregatedTotals.totalExpense}, Net Balance - $${aggregatedTotals.netBalance}.`,
-            metadata: { type: "aggregate", userId, period: "all-time" },
-        }),
-    ];
+    // const summaryDocs = [
+    //     new Document({
+    //         text: `Financial Summary: Total Income - $${aggregatedTotals.totalIncome}, Total Expenses - $${aggregatedTotals.totalExpense}, Net Balance - $${aggregatedTotals.netBalance}.`,
+    //         metadata: { type: "aggregate", userId, period: "all-time" },
+    //     }),
+    // ];
 
-    return [...expenses, ...incomes, ...summaryDocs];
+    return [...expenses, ...incomes];
 }
 
 async function createIndex(documents) {
