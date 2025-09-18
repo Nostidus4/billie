@@ -4,7 +4,7 @@ import { axiosInstance } from '@utils/axiosInstance'
 import { API_PATHS } from '@utils/apiPath'
 
 const INITIAL_MESSAGES = [
-  { id: 'w1', role: 'assistant', text: 'Xin chào! Mình là Billie Bot. Mình có thể giúp gì cho bạn?' }
+  { id: 'w1', role: 'assistant', text: 'Hello, I\'m Billiebot! How can I assist you today?' }
 ]
 
 const ChatbotWidget = ({ isOpen, onClose }) => {
@@ -47,7 +47,7 @@ const ChatbotWidget = ({ isOpen, onClose }) => {
       setMessages(prev => prev.map(m => m.id === thinkingId ? { ...m, text: replyText } : m))
     } catch (error) {
       console.error('Chatbot API error:', error)
-      const errorText = 'Rất tiếc, mình đang gặp sự cố. Vui lòng thử lại sau.'
+      const errorText = 'Sorry, something went wrong. Please try again later.'
       setMessages(prev => prev.map(m => m.id === thinkingId ? { ...m, text: errorText } : m))
     } finally {
       setIsLoading(false)
@@ -79,7 +79,7 @@ const ChatbotWidget = ({ isOpen, onClose }) => {
         <div className='px-4 py-3 border-b flex items-center justify-between sticky top-0 bg-white z-10'>
           <div>
             <h3 className='font-semibold text-gray-800'>Billie Chatbot</h3>
-            <p className='text-xs text-gray-500'>Hỏi mình về thu nhập, chi tiêu, số dư…</p>
+            <p className='text-xs text-gray-500'>Ask me questions regarding your income, expense or financial status,...</p>
           </div>
           <button onClick={onClose} className='p-2 rounded-lg hover:bg-gray-100'>
             <LuX className='text-xl text-gray-600' />
@@ -103,7 +103,7 @@ const ChatbotWidget = ({ isOpen, onClose }) => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
               rows={1}
-              placeholder='Nhập tin nhắn…'
+              placeholder='Your message...'
               className='flex-1 resize-none rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500'
               disabled={isLoading}
             />
