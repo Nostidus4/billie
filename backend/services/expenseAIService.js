@@ -2,10 +2,12 @@ const { Document, Settings, VectorStoreIndex } = require("llamaindex");
 const { gemini, GeminiEmbedding, GEMINI_MODEL } = require("@llamaindex/google");
 const Expense = require("../models/Expense");
 const Income = require("../models/Income");
+const Goal = require("../models/Goal");
+const { Types } = require("mongoose");
 
 Settings.llm = gemini({
     apiKey: process.env.GOOGLE_API_KEY,
-    model: GEMINI_MODEL.GEMINI_2_5_FLASH_LATEST,
+    model: GEMINI_MODEL.GEMINI_2_0_FLASH,
 });
 Settings.embedModel = new GeminiEmbedding();
 
@@ -70,27 +72,41 @@ async function loadUserExpenses(userId) {
     return documents;
 }
 
-async function loadUserFinancialData(userId) {
-    const [expenses, incomes] = await Promise.all([
-        loadUserExpenses(userId),
-        loadUserIncomes(userId),
-        // getAggregatedTotal(userId),
-    ]);
+async function loadUserGoals(userId) {
+    const goals = await Goal.find({ userId }).sort({ createdAt: -1 });
 
-    // console.log("Aggregated Totals:", aggregatedTotals);
+    const documents = goals.map(
+        (goals) =>
+            new Document({
+                text: `Goal: Title - ${goals.title}, Amount - $${goals.amount}, Current Amount - $${goals.currentAmount}, Status - ${goals.status}, Deadline - ${goals.deadline.toDateString()}.`,
+                metadata: {
+                    id: goals._id.toString(),
+                    status: goals.status,
+                    deadline: goals.deadline.toISOString(),
+                    type: "goal",
+                },
+            }),
+    );
 
-    // const summaryDocs = [
-    //     new Document({
-    //         text: `Financial Summary: Total Income - $${aggregatedTotals.totalIncome}, Total Expenses - $${aggregatedTotals.totalExpense}, Net Balance - $${aggregatedTotals.netBalance}.`,
-    //         metadata: { type: "aggregate", userId, period: "all-time" },
-    //     }),
-    // ];
-
-    return [...expenses, ...incomes];
+    return documents;
 }
 
-async function createIndex(documents) {
-    return VectorStoreIndex.fromDocuments(documents);
+async function loadUserFinancialData(userId) {
+    const [expenses, incomes, goals, aggregatedTotals] = await Promise.all([
+        loadUserExpenses(userId),
+        loadUserIncomes(userId),
+        loadUserGoals(userId),
+        getAggregatedTotal(userId),
+    ]);
+
+    const summaryDocs = [
+        new Document({
+            text: `Financial Summary: Total Income - $${aggregatedTotals.totalIncome}, Total Expenses - $${aggregatedTotals.totalExpense}, Net Balance - $${aggregatedTotals.netBalance}.`,
+            metadata: { type: "aggregate", userId, period: "all-time" },
+        }),
+    ];
+
+    return [...expenses, ...incomes, ...goals, ...summaryDocs];
 }
 
 async function queryAgent(userId, question) {
@@ -98,9 +114,9 @@ async function queryAgent(userId, question) {
     if (documents.length === 0) {
         return "No financial records (expenses or incomes) found.";
     }
-    const index = await createIndex(documents);
+    const index = await VectorStoreIndex.fromDocuments(documents);
 
-    const retriever = index.asRetriever();
+    const retriever = index.asRetriever({ similarityTopK: 10 });
 
     const queryEngine = index.asQueryEngine({
         retriever,
@@ -108,13 +124,8 @@ async function queryAgent(userId, question) {
             "You are a financial advisor. Use the provided expense and income data to answer questions accurately, including calculations for totals, nets, or trends. Always reference specific dates, sources, and categories.",
     });
 
-    // Or for an agent (handles complex queries)
-    // const { ReActAgent } = require('@llamaindex/agent/react');
-    // const agent = ReActAgent.fromTools([index.asTool()], { llm });
-    // return await agent.chat(question);
-
     const response = await queryEngine.query({ query: question });
     return response.response;
 }
 
-module.exports = { loadUserExpenses, createIndex, queryAgent };
+module.exports = { loadUserExpenses, queryAgent };
