@@ -1,17 +1,89 @@
-const { Document, Settings, VectorStoreIndex } = require("llamaindex");
-const { gemini, GeminiEmbedding, GEMINI_MODEL } = require("@llamaindex/google");
+const { Document, Settings, VectorStoreIndex, tool } = require("llamaindex");
+const { OpenAIEmbedding } = require("@llamaindex/openai");
+const { OpenAI } = require("openai");
 const Expense = require("../models/Expense");
 const Income = require("../models/Income");
 const Goal = require("../models/Goal");
 const { Types } = require("mongoose");
 
-Settings.llm = gemini({
-    apiKey: process.env.GOOGLE_API_KEY,
-    model: GEMINI_MODEL.GEMINI_2_0_FLASH,
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    model: "gpt-4o-mini",
 });
-Settings.embedModel = new GeminiEmbedding();
 
-const getAggregatedTotal = async (userId) => {
+const tools = [
+    {
+        type: "function",
+        function: {
+            name: "get_user_financial_data",
+            description:
+                "Get all information related to user's financial data.",
+            parameters: {
+                type: "object",
+                properties: {},
+            },
+        },
+    },
+];
+
+async function llm(messages, tools) {
+    const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages,
+        tools,
+        tool_choice: "auto",
+    });
+
+    const message = completion.choices[0].message;
+    if (!message) {
+        throw new Error("No response from LLM");
+    }
+
+    return message;
+}
+
+async function callTool(tooCall, userId) {
+    const toolName = tooCall.function.name;
+    // const toolInput = JSON.parse(tooCall.function.arguments);
+
+    switch (toolName) {
+        case "get_user_financial_data": {
+            const financialData = await loadUserFinancialData(userId);
+            return JSON.stringify(financialData);
+        }
+        default:
+            return `Unknown tool: ${toolName}`;
+    }
+}
+
+async function runAgentLoop(userId, userInput) {
+    let messages = [{ role: "user", content: userInput }];
+
+    while (true) {
+        const response = await llm(messages, tools);
+
+        messages.push(response);
+
+        if (response.tool_calls) {
+            for (const toolCall of response.tool_calls) {
+                if (toolCall.type !== "function") {
+                    throw new Error("Unsupported tool call type");
+                }
+
+                const toolResponse = await callTool(toolCall, userId);
+                messages.push({
+                    role: "tool",
+                    content: toolResponse,
+                    tool_call_id: toolCall.id,
+                });
+            }
+        } else {
+            return response.content;
+        }
+    }
+}
+
+async function getAggregatedTotal(userId) {
     const userObjectId = new Types.ObjectId(String(userId));
     const totalIncome = await Income.aggregate([
         { $match: { userId: userObjectId } },
@@ -29,7 +101,7 @@ const getAggregatedTotal = async (userId) => {
             (totalIncome[0] ? totalIncome[0].total : 0) -
             (totalExpense[0] ? totalExpense[0].total : 0),
     };
-};
+}
 
 async function loadUserIncomes(userId) {
     const incomes = await Income.find({ userId }).sort({ date: -1 });
@@ -128,4 +200,4 @@ async function queryAgent(userId, question) {
     return response.response;
 }
 
-module.exports = { loadUserExpenses, queryAgent };
+module.exports = { loadUserExpenses, queryAgent, runAgentLoop };

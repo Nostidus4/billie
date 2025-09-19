@@ -3,7 +3,7 @@ import { BASE_URL } from "./apiPath";
 
 const instance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     // Không set Content-Type mặc định để axios tự xác định (đặc biệt với FormData)
     Accept: "application/json",
