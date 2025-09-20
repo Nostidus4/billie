@@ -1,5 +1,4 @@
-const { Document, Settings, VectorStoreIndex, tool } = require("llamaindex");
-const { OpenAIEmbedding } = require("@llamaindex/openai");
+const { Document, VectorStoreIndex } = require("llamaindex");
 const { OpenAI } = require("openai");
 const Expense = require("../models/Expense");
 const Income = require("../models/Income");
@@ -24,6 +23,42 @@ const tools = [
             },
         },
     },
+    {
+        type: "function",
+        function: {
+            name: "add_user_goal",
+            description: "Add a new goal for the user.",
+            parameters: {
+                type: "object",
+                properties: {
+                    title: {
+                        type: "string",
+                        description: "The title of the goal.",
+                    },
+                    amount: {
+                        type: "number",
+                        description: "The target amount for the goal.",
+                    },
+                    deadline: {
+                        type: "string",
+                        description: "The deadline for the goal in ISO format.",
+                    },
+                },
+                required: ["title", "amount", "deadline"],
+            },
+        },
+    },
+    {
+        type: "function",
+        function: {
+            name: "get_today_date",
+            description: "Returns today's date.",
+            parameters: {
+                type: "object",
+                properties: {},
+            },
+        },
+    },
 ];
 
 async function llm(messages, tools) {
@@ -42,14 +77,34 @@ async function llm(messages, tools) {
     return message;
 }
 
+async function addUserGoal(userId, { title, amount, deadline }) {
+    if (!title || !amount || !deadline) {
+      throw new Error("All fields are required");
+    }
+    const newGoal = new Goal({
+      userId,
+      title,
+      amount,
+      deadline: new Date(deadline),
+    });
+    await newGoal.save();
+    return JSON.stringify(newGoal);
+  }
+
 async function callTool(tooCall, userId) {
     const toolName = tooCall.function.name;
-    // const toolInput = JSON.parse(tooCall.function.arguments);
+    const toolInput = JSON.parse(tooCall.function.arguments);
 
     switch (toolName) {
         case "get_user_financial_data": {
             const financialData = await loadUserFinancialData(userId);
             return JSON.stringify(financialData);
+        }
+        case "add_user_goal": {
+            return await addUserGoal(userId, toolInput);
+        }
+        case "get_today_date": {
+            return JSON.stringify({ date: new Date().toISOString() });
         }
         default:
             return `Unknown tool: ${toolName}`;
