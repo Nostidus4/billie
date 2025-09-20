@@ -131,7 +131,7 @@ const ChatbotWidget = ({ isOpen, onClose }) => {
               onKeyDown={onKeyDown}
               rows={1}
               placeholder='Type a message…'
-              className='flex-1 resize-none rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500'
+              className='flex-1 w-0 resize-none rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500'
               disabled={isLoading}
             />
             <button
