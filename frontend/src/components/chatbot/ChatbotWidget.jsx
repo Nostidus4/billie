@@ -4,7 +4,7 @@ import { axiosInstance } from '@utils/axiosInstance'
 import { API_PATHS } from '@utils/apiPath'
 
 const INITIAL_MESSAGES = [
-  { id: 'w1', role: 'assistant', text: "Hi! I'm Billie Bot. How can I help you today?" }
+  { id: 'w1', role: 'assistant', text: 'Hello, I\'m Billiebot! How can I assist you today?' }
 ]
 
 const ChatbotWidget = ({ isOpen, onClose }) => {
@@ -59,7 +59,7 @@ const ChatbotWidget = ({ isOpen, onClose }) => {
       setMessages(prev => prev.map(m => m.id === thinkingId ? { ...m, text: replyText } : m))
     } catch (error) {
       console.error('Chatbot API error:', error)
-      const errorText = "Sorry, I'm having trouble right now. Please try again later."
+      const errorText = 'Sorry, something went wrong. Please try again later.'
       setMessages(prev => prev.map(m => m.id === thinkingId ? { ...m, text: errorText } : m))
     } finally {
       setIsLoading(false)

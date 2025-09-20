@@ -1,4 +1,4 @@
-const { queryAgent } = require("../services/expenseAIService.js");
+const { queryAgent, runAgentLoop } = require("../services/expenseAIService.js");
 const Expense = require("../models/Expense");
 
 exports.queryAIExpenses = async (req, res) => {
@@ -10,7 +10,8 @@ exports.queryAIExpenses = async (req, res) => {
             return res.status(400).json({ message: "Question is required" });
         }
 
-        const answer = await queryAgent(userId, question);
+        const answer = await runAgentLoop(userId, question);
+        console.log(answer);
         res.status(200).json({ answer });
     } catch (error) {
         console.error("AI Query Error:", error);
