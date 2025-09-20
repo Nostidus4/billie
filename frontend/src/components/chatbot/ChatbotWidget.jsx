@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { LuX, LuSend, LuMessageSquare, LuBot } from 'react-icons/lu'
 import { axiosInstance } from '@utils/axiosInstance'
 import { API_PATHS } from '@utils/apiPath'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 const INITIAL_MESSAGES = [
   { id: 'w1', role: 'assistant', text: 'Hello, I\'m Billiebot! How can I assist you today?' }
@@ -109,7 +111,13 @@ const ChatbotWidget = ({ isOpen, onClose }) => {
         <div ref={containerRef} className='h-[360px] overflow-y-auto px-4 py-3 space-y-3 bg-gray-50'>
           {messages.map(m => (
             <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`${m.role === 'user' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-800'} max-w-[85%] rounded-2xl px-3 py-2 shadow-sm`}>{m.text}</div>
+              <div className={`${m.role === 'user' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-800'} max-w-[85%] rounded-2xl px-3 py-2 shadow-sm`}>
+                {m.role === 'assistant' ? (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+                ) : (
+                  m.text
+                )}
+              </div>
             </div>
           ))}
         </div>
