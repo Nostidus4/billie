@@ -51,7 +51,7 @@ cd billie
 ```bash
 cd backend
 pip install -r requirements.txt
-python app.py
+npm run dev
 ```
 
 ### 3. Cài đặt Frontend
@@ -62,7 +62,7 @@ npm run dev
 ```
 
 ### 4. Truy cập ứng dụng
-- Frontend: `http://localhost:3000`
+- Frontend: `http://localhost:5173`
 - Backend API: `http://localhost:8000`
 
 ## 🛠️ Công nghệ Sử dụng
@@ -95,9 +95,7 @@ npm run dev
 ## 📞 Thông tin Liên hệ
 
 **SciNova Team**
-- 📧 Email: contact@scinova.com
 - 📱 GitHub: https://github.com/Nostidus4/billie
-
 ---
 
 *Billie - Bảo vệ sức khỏe, quản lý tài chính thông minh* 💚
