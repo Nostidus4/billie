@@ -2,7 +2,7 @@
 
 ## 🌟 Giới thiệu
 
-**Billie** là một ứng dụng thông minh được phát triển bởi **SciNova** nhằm số hóa hóa đơn giấy và quản lý tài chính cá nhân một cách hiệu quả. Ứng dụng không chỉ giúp người dùng theo dõi chi tiêu mà còn bảo vệ sức khỏe bằng cách giảm thiểu tiếp xúc với hóa đơn in nhiệt chứa chất BPS độc hại.
+**Billie** là một ứng dụng thông minh được phát triển bởi **BKU-SciNova** nhằm số hóa hóa đơn giấy và quản lý tài chính cá nhân một cách hiệu quả. Ứng dụng không chỉ giúp người dùng theo dõi chi tiêu mà còn bảo vệ sức khỏe bằng cách giảm thiểu tiếp xúc với hóa đơn in nhiệt chứa chất BPS độc hại.
 
 ### ⚠️ Vấn đề BPS trong hóa đơn
 
@@ -68,19 +68,21 @@ npm run dev
 ## 🛠️ Công nghệ Sử dụng
 
 ### Frontend
-- **React/Next.js** - UI Framework
-- **Tailwind CSS** - Styling
-- **Chart.js** - Biểu đồ
+- **React/Next.js** - Thư viện JavaScript chính để xây dựng giao diện người dùng.
+- **Tailwind CSS** - Framework CSS tiện ích, giúp thiết kế giao diện nhanh chóng và nhất quán.
+- ***MUI* - Bộ component UI hỗ trợ xây dựng giao diện hiện đại.
 
 ### Backend
-- **Python/FastAPI** - API Server
-- **TensorFlow** - AI/ML processing
-- **PostgreSQL** - Database
+-**Node.js** - Môi trường chạy JavaScript phía máy chủ.
+-**Express.js - Framework web backend, quản lý API và định tuyến
+-**JWT (JSON Web Token)** - Giải pháp xác thực và bảo mật phiên đăng nhập.
 
 ### AI Features
-- **OCR** - Nhận dạng văn bản
-- **NLP** - Xử lý ngôn ngữ tự nhiên
-- **Voice Recognition** - Nhận dạng giọng nói
+- **Prophet (Python)** - Thư viện dự báo chuỗi thời gian, sử dụng cho chức năng dự đoán chi tiêu/tài chính.
+- **Whisper (OpenAI)** - Mô hình chuyển đổi giọng nói thành văn bản, phục vụ nhập liệu bằng giọng nói.
+- **Gemini (Google)** - Mô hình xử lý hình ảnh, dùng cho chức năng trích xuất dữ liệu từ hóa đơn (Scan Bill).
+- **OpenAI API** - Cung cấp năng lực xử lý ngôn ngữ tự nhiên cho Chatbot.
+- **LlamaIndex** - Framework xây dựng index, cho phép AI Agent truy cập và xử lý dữ liệu tài chính người dùng.
 
 ## 📱 Hướng dẫn Sử dụng
 
