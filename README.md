@@ -65,12 +65,16 @@ npm run dev
 - Frontend: `http://localhost:5173`
 - Backend API: `http://localhost:8000`
 
+### 5. Test Account 
+- Email: billie01@gmail.com
+- Password: billie01
+
 ## 🛠️ Công nghệ Sử dụng
 
 ### Frontend
 - **React/Next.js** - Thư viện JavaScript chính để xây dựng giao diện người dùng.
 - **Tailwind CSS** - Framework CSS tiện ích, giúp thiết kế giao diện nhanh chóng và nhất quán.
-- ***MUI* - Bộ component UI hỗ trợ xây dựng giao diện hiện đại.
+- **MUI** - Bộ component UI hỗ trợ xây dựng giao diện hiện đại.
 
 ### Backend
 -**Node.js** - Môi trường chạy JavaScript phía máy chủ.
