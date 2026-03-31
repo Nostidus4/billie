@@ -2,9 +2,9 @@ import React from 'react'
 
 const GoalList = ({ goals, onDelete, onDownload }) => {
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('vi-VN', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'VND'
+      currency: 'USD'
     }).format(amount)
   }
 
